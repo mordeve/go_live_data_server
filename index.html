@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <title>Document</title>
+</head>
+
+<body>
+
+    <!--  items to top center -->
+    <div class="container" style="text-align: center;">
+
+        <h2>Currency Live Data</h2>
+        <div class="items" style="padding-left: 275px; padding-top: 50px;">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="time">Timestamp</label>
+                </div>
+                <div class="col-sm-4">
+                    <label for="time" id="time"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="btc">BTC/USD</label>
+                </div>
+                <div class="col-sm-4">
+                    <label for="btc" id="btc"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="eth">ETH/USD</label>
+                </div>
+                <div class="col-sm-4">
+                    <label for="eth" id="eth"></label>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let datas = {}
+            const websocket = new WebSocket("ws://localhost:8080/stats")
+
+            websocket.onopen = function (event) {
+                console.log("Connection established")
+            }
+
+            websocket.onmessage = function (event) {
+                datas = JSON.parse(event.data)
+                console.log(datas)
+                document.getElementById("btc").innerText = datas.current_BTC
+                document.getElementById("time").innerText = datas.timestamp
+                document.getElementById("eth").innerText = datas.current_ETH
+            }
+            console.log(datas)
+            websocket.onclose = function (event) {
+                console.log("Connection closed")
+            }
+
+            websocket.onerror = function (event) {
+                console.log("Error occured")
+            }
+
+
+        </script>
+</body>
+
+</html>
